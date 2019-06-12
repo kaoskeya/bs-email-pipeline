@@ -76,7 +76,7 @@ async function convertBsEmail() {
     "Template": {
       "TemplateName": `${filename}${env ? `-${env}` : ''}`,
       "SubjectPart": outputSubject.replace(/ +(?= )/g,''),
-      "TextPart": htmlToText.fromString(outputHtml),
+      "TextPart": "Please view the HTML version", // htmlToText.fromString(outputHtml),
       "HtmlPart": outputHtml,
     }
   }), 'utf8');
