@@ -5,9 +5,19 @@ const axios = require('axios');
 const formurlencoded = require('form-urlencoded').default;
 const minify = require('html-minifier').minify;
 const htmlToText = require('html-to-text');
+const queryString = require('query-string');
 const _ = require('lodash');
 
 const ENDPOINT = "https://bootstrap-email.herokuapp.com/";
+
+function decodeData(value) {
+  return queryString.stringify(
+    queryString.parse(
+      value
+    ),
+    { encode: false }
+  )
+}
 
 async function convertBsEmail() {
   // set up filename, base dir, extract markup.
@@ -51,7 +61,7 @@ async function convertBsEmail() {
   }
 
   const $2 = cheerio.load(renderedPage.data);
-  const outputHtml = minify($2('#responseCodeMirror').val(), {
+  const outputHtml = minify(decodeData($2('#responseCodeMirror').val()), {
     collapseWhitespace: true,
     removeComments: true,
     quoteCharacter: "'",
