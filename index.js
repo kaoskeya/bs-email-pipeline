@@ -68,7 +68,7 @@ async function convertBsEmail() {
   }).replace(/\s{2,}/g, ' ')
   .replace('"', "'");
   const $3 = cheerio.load(outputHtml);
-  const outputSubject = $3('.preview').text();
+  const outputSubject = $3('#subject').text();
 
   fs.writeFileSync(renderedFile, outputHtml, 'utf8');
 
