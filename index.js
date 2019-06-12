@@ -4,13 +4,10 @@ const cheerio = require('cheerio')
 const axios = require('axios');
 const formurlencoded = require('form-urlencoded').default;
 const minify = require('html-minifier').minify;
+const htmlToText = require('html-to-text');
 const _ = require('lodash');
 
 const ENDPOINT = "https://bootstrap-email.herokuapp.com/";
-
-function printHeader(header) {
-  // console.log(`---------- ${header} ----------`);
-}
 
 async function convertBsEmail() {
   // set up filename, base dir, extract markup.
@@ -21,18 +18,15 @@ async function convertBsEmail() {
   const markup = fs.readFileSync(file, 'utf8');
 
   const renderedFile = path.resolve(path.dirname(file), `../rendered/${filename}.html`);
-  const outputJsonFile = path.resolve(path.dirname(file), `../json/${env ? `${env}/` : ''}${filename}${env ? `-${env}` : ''}.json`);
+  const outputJsonFile = path.resolve(path.dirname(file), `../json/${env ? `${env}/` : ''}${filename}.json`);
 
   // fetch page and set up cookies and token
   const initialPage = await axios.get(ENDPOINT);
-  printHeader('COOKIE')
   const tempCookie = initialPage.headers['set-cookie'][0];
   const cookie = tempCookie.substring(tempCookie.indexOf("=") + 1, tempCookie.indexOf(";"));
-  // console.log(`_bootstrap_email_rails_example_session: ${cookie}`);
   
   const $ = cheerio.load(initialPage.data);
 
-  printHeader('BODY')
   const body = {
     "utf": "✓",
     "authenticity_token": $('[name=authenticity_token]').val(),
@@ -72,14 +66,10 @@ async function convertBsEmail() {
     "Template": {
       "TemplateName": `${filename}${env ? `-${env}` : ''}`,
       "SubjectPart": outputSubject.replace(/ +(?= )/g,''),
-      "TextPart": "Required",
+      "TextPart": htmlToText.fromString(outputHtml),
       "HtmlPart": outputHtml,
     }
   }), 'utf8');
-
-  // console.log({ renderedDirectory });
 }
 
 convertBsEmail();
-
-// cheerio.load

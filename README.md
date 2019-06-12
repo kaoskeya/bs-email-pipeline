@@ -1,3 +1,5 @@
+# Bootstrap Email to AWS SES Template Pipeline.
+
 ### Usage
 
 `node index.js <path to src template file> <stage>`
