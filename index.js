@@ -74,7 +74,7 @@ async function convertBsEmail() {
 
   fs.writeFileSync(outputJsonFile, JSON.stringify({
     "Template": {
-      "TemplateName": `${filename}${env ? `-${env}` : ''}`,
+      "TemplateName": `${env ? `${env}-` : ''}${filename}`,
       "SubjectPart": outputSubject.replace(/ +(?= )/g,''),
       "TextPart": "Please view the HTML version", // htmlToText.fromString(outputHtml),
       "HtmlPart": outputHtml,
