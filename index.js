@@ -8,7 +8,7 @@ const htmlToText = require('html-to-text');
 const queryString = require('query-string');
 const _ = require('lodash');
 
-const ENDPOINT = "https://bootstrap-email.herokuapp.com/";
+const ENDPOINT = "https://editor.bootstrapemail.com/documents";
 
 function decodeData(value) {
   return queryString.stringify(
@@ -32,16 +32,16 @@ async function convertBsEmail() {
 
   // fetch page and set up cookies and token
   const initialPage = await axios.get(ENDPOINT);
-  const tempCookie = initialPage.headers['set-cookie'][0];
+
+  const tempCookie = initialPage.headers['set-cookie'][1];
   const cookie = tempCookie.substring(tempCookie.indexOf("=") + 1, tempCookie.indexOf(";"));
   
   const $ = cheerio.load(initialPage.data);
 
   const body = {
-    "utf": "✓",
     "authenticity_token": $('[name=authenticity_token]').val(),
     markup,
-    "checkbox1": "on",
+    email_address: "",
   }
 
   let renderedPage;
@@ -50,18 +50,18 @@ async function convertBsEmail() {
       url: ENDPOINT,
       method: "post",
       headers: {
-        "Cookie": `_bootstrap_email_rails_example_session=${cookie};`,
+        "Cookie": `_bootstrap_email_editor_session=${cookie};`,
         "Content-Type": "application/x-www-form-urlencoded"
       },
       data: formurlencoded(body),
     })
   } catch (e) {
-    console.log(e)
+    console.log(e.response)
     return;
   }
 
   const $2 = cheerio.load(renderedPage.data);
-  const outputHtml = minify(decodeData($2('#responseCodeMirror').val()), {
+  const outputHtml = minify(decodeData($2('#hiddenCompiled').val()), {
     collapseWhitespace: true,
     removeComments: true,
     quoteCharacter: "'",
