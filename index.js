@@ -4,20 +4,20 @@ const cheerio = require('cheerio')
 const axios = require('axios');
 const formurlencoded = require('form-urlencoded').default;
 const minify = require('html-minifier').minify;
-const htmlToText = require('html-to-text');
+// const htmlToText = require('html-to-text');
 const queryString = require('query-string');
 const _ = require('lodash');
 
 const ENDPOINT = "https://editor.bootstrapemail.com/documents";
 
-function decodeData(value) {
-  return queryString.stringify(
-    queryString.parse(
-      value
-    ),
-    { encode: false }
-  )
-}
+// function decodeData(value) {
+//   return queryString.stringify(
+//     queryString.parse(
+//       value
+//     ),
+//     { encode: false }
+//   )
+// }
 
 async function convertBsEmail() {
   // set up filename, base dir, extract markup.
@@ -60,8 +60,12 @@ async function convertBsEmail() {
     return;
   }
 
-  const $2 = cheerio.load(renderedPage.data);
-  const outputHtml = minify(decodeData($2('#hiddenCompiled').val()), {
+  const $2 = cheerio.load(renderedPage.data, {
+    xmlMode: true
+  });
+  // console.log($2('#hiddenCompiled').html());
+  
+  const outputHtml = minify($2('#hiddenCompiled').html(), {
     collapseWhitespace: true,
     removeComments: true,
     quoteCharacter: "'",
