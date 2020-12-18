@@ -81,7 +81,7 @@ async function convertBsEmail() {
       "TemplateName": `${env ? `${env}-` : ''}${filename}`,
       "SubjectPart": outputSubject.replace(/ +(?= )/g,''),
       "TextPart": "Please view the HTML version", // htmlToText.fromString(outputHtml),
-      "HtmlPart": outputHtml,
+      "HtmlPart": unescape(outputHtml),
     }
   }), 'utf8');
 }
