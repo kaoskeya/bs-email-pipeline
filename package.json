@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "cheerio": "^1.0.0-rc.3",
     "form-urlencoded": "^4.2.1",
     "html-minifier": "^4.0.0",
